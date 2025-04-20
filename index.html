@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gerador de Link de Rastreamento</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col items-center justify-center p-4">
+  <div class="bg-white shadow-md rounded-lg p-8 max-w-lg w-full">
+    <h1 class="text-2xl font-semibold mb-4 text-center text-gray-800">Gerador de Link de Rastreamento</h1>
+    <p class="mb-6 text-gray-600 text-center">Este site gera um link único de rastreamento para você compartilhar.</p>
+    <div class="flex items-center border border-gray-300 rounded-md overflow-hidden">
+      <input id="trackingLink" type="text" readonly class="flex-grow px-4 py-2 text-gray-700 focus:outline-none" />
+      <button id="copyBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 transition-colors duration-200">
+        <i class="fas fa-copy"></i>
+      </button>
+    </div>
+    <p id="copyMsg" class="mt-2 text-green-600 text-center hidden">Link copiado para a área de transferência!</p>
+  </div>
+
+  <script>
+    // Function to generate a simple unique ID (timestamp + random)
+    function generateUniqueId() {
+      return Date.now().toString(36) + Math.random().toString(36).substring(2, 8);
+    }
+
+    function generateTrackingLink() {
+      const baseUrl = window.location.origin + window.location.pathname;
+      const uniqueId = generateUniqueId();
+      return baseUrl + '?track=' + uniqueId;
+    }
+
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        const msg = document.getElementById('copyMsg');
+        msg.classList.remove('hidden');
+        setTimeout(() => {
+          msg.classList.add('hidden');
+        }, 2000);
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const trackingLinkInput = document.getElementById('trackingLink');
+      const copyBtn = document.getElementById('copyBtn');
+
+      const trackingLink = generateTrackingLink();
+      trackingLinkInput.value = trackingLink;
+
+      copyBtn.addEventListener('click', () => {
+        copyToClipboard(trackingLinkInput.value);
+      });
+    });
+  </script>
+</body>
+</html>
